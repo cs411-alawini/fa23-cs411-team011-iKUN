@@ -1,19 +1,19 @@
-# team000-sample
+# team011
 
 ## Basic Information
 
 |   Info      |        Description     |
 | ----------- | ---------------------- |
-| TeamID      |        Team-000        |
-| TeamName    |         sample         |
-| Captain     |       Abdu Alawini     |
-| Captain     |  alawini@illinois.edu  |
-| Member1     |        Kevin Pei       |
-| Member1     |   kevin2@illinois.edu  |
-| Member2     |    Bharati Kulkarni    |
-| Member2     |  bharati1@illinois.edu |
-| Member3     |                        |
-| Member3     |                        |
+| TeamID      |        Team-011        |
+| TeamName    |         iKUN           |
+| Captain     |       Yuxi Chen        |
+| Captain     |   yuxi5@illinois.edu   |
+| Member1     |      Yihong Yang       |
+| Member1     |  yihongy3@illinois.edu |
+| Member2     |       Qiyang Wu        |
+| Member2     |  qiyangw2@illinois.edu |
+| Member3     |      Shurui Liu        |
+| Member3     |  shuruil2@illinois.edu |
 
 ## Project Information
 
