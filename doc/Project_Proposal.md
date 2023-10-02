@@ -28,7 +28,7 @@ Firstly, with the help of a wider time range of the crime data, we want to intro
 Secondly, we want to design a function called **SaferRoute**. We want to use routing algorithms to help late-night travelers walk on a route that's safer. We'll take both time and safety rates into account and create a more suitable route. We also provide the route based on the age, time, and sex of the user as we think the safety in an area will differ for different groups of people at different times. If the overall safety rate is too low, we may advise the user to consider traveling at a later time.
 To make the user experience more convinient, we'll allow users to save their 'favourate locations', which will make finding regular routes faster.
 
-We'll also allow users to report new crimes or inacuurate data in a given location, thus we can use user input to make our service more accurate.
+We'll also allow users to report new crimes in a given location, thus we can use user input to make our service more accurate.
 
 ### **Description** of an Application
 
