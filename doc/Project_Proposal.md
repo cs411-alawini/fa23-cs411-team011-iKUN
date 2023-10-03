@@ -26,6 +26,9 @@ Our project includes several simple functions:
 Firstly, with the help of a wider time range of the crime data, we want to introduce a function called **Trend.** By analyzing the change in crime rate and type in the past year, we want to tell the users how safety rating in a regions has changed. (If a region only has an average safety rate, but its safety rate keeps increasing in the past years, this region can be a great choice for living)
 
 Secondly, we want to design a function called **SaferRoute**. We want to use routing algorithms to help late-night travelers walk on a route that's safer. We'll take both time and safety rates into account and create a more suitable route. We also provide the route based on the age, time, and sex of the user as we think the safety in an area will differ for different groups of people at different times. If the overall safety rate is too low, we may advise the user to consider traveling at a later time.
+To make the user experience more convinient, we'll allow users to save their 'favourate locations', which will make finding regular routes faster.
+
+We'll also allow users to report new crimes in a given location, thus we can use user input to make our service more accurate.
 
 ### **Description** of an Application
 
@@ -67,20 +70,24 @@ Yuxi Chen will be responsible for the Backend development.
 
 - Develop the algorithm for the "SaferRoute" function, incorporating various factors such as safety ratings, time, and demographic data.
 - Develop APIs to facilitate data retrieval and integration with the frontend.
+- Carry out database design.
 
 Yihong Yang will be responsible for Backend development and testing.
 
 - Work together with Yuxi Chen for the "SaferRoute" function.
 - Conduct testing to identify bugs and ensure the system works seamlessly.
 - Create documentation for the project, including user manuals and technical documentation.
+- Complete database implementation.
 
 Qiyang Wu will be responsible for Frontend development.
 
 - Design the user interface and experience for the website, ensuring it is user-friendly and intuitive.
 - Integrate a map service (like Google Maps) to visualize the crime data and safety ratings.
+- Complete database implementation.
 
 Shurui Liu will be responsible for Database Development.
 
 - Set up a database to store and manage the crime data efficiently.
 - Analyze the data to identify trends and patterns in crime rates over the years.
 - Extract relevant data to be used in the safety rating system.
+- Do database indexing.
