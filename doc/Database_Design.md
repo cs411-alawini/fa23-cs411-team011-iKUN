@@ -62,19 +62,22 @@ This entity stores all the locations of the area, with 6 attributes.
 - **LocationName**: a string sttribute to identify the name of location.
 - **Latitude**: a floating-point attribute representing the latitude of location.
 - **Longitude**: a floating-point attribute representing the longitude of location.
-- **AreaId:** an integer attribute, **foreign key** to `Areas`.
 - **PremisId:** an integer attribute, **foreign key** to `LocationType`.
 
 The entity is designed with the following assumptions:
 
 1. The same location has the same longitude and latitude, we won't refine its precision and latitude for the same location again. Both are just used to better determine where the location is on the map.
-2. For a location type and specific location need to use the key of `Areas` and `LocationTypes` as a foreign key for identification. One location can only correspond to one Locationtype and one Area.
+2. For a location type we need to use the key of  `LocationTypes` as a foreign key for identification. One location can only correspond to one Locationtype.
 
 ### 5. Areas
 
 This entity stores all information about different areas, including the area code and area name, with 2 attributes.
 
-- **AreaId**: a unique identifier of the area in each location. It will be **primary key** and will be of an integer attribute.
+- **Latitude**: a floating-point attribute representing the latitude of location.
+- **Longitude**: a floating-point attribute representing the longitude of location.
+    
+    Latitude and Longitude together serves as a **primary key**.
+    
 - **AreaName**: a string attribute to identify the name of the area. Such as `Southwest` or `Central`.
 
 > Because a geographic location can cover a large area, when the need to pass through a geographic location is unavoidable, delineating specific `Areas` can help avoid crime-prone locations and can improve security.
@@ -130,17 +133,17 @@ This relation will be a **many-to-many** relation as a specific crime can happ
 
 This is a relation between different location types for given locations. This is a **many-to-one** relation as each location can only have one location type but each location type can be at multiple locations. The `ConsistLL` relation has no attributes. And since this is a many-to-one relation, we will not create a separate table for it. We will simply add `PremisId`, the primary key of `LocationTypes`, to `Locations` and add foreign key constraints.
 
-### 4. ConsistLA (Locations and Areas)
-
-This is a relation between different locations for given areas. This is a **many-to-one** relation as each location can only have one area type but each area can have multiple locations. The `ConsistLA` relation has no attributes. And since this is a many-to-one relation, we will not create a separate table for it. We will simply add `AreaId`, the primary key of `Areas`, to `Locations` and add foreign key constraints.
-
-### 5. ConsistCL (CrimeEvents and Locations)
+### 4. ConsistCL (CrimeEvents and Locations)
 
 This is a relation between different crime events for given locations. This is a **many-to-one** relation as each crime event can only happen at one location but each location can have multiple crime events. The `ConsistCL` relation has no attributes. And since this is a many-to-one relation, we will not create a separate table for it. We will simply add `LocationId`, the primary key of `Locations`, to `CrimeEvents` and add foreign key constraints.
 
-### 6. ConsistCC (CrimeEvents and CrimeTypes)
+### 5. ConsistCC (CrimeEvents and CrimeTypes)
 
 This is a relation between different crime events for given crime types. This is a **many-to-one** relation as each crime event can only have one crime type but each crime type can have multiple events. The `ConsistCC` relation has no attributes. And since this is a many-to-one relation, we will not create a separate table for it. We will simply add `CrimeId`, the primary key of `CrimeTypes`, to `CrimeEvents` and add foreign key constraints.
+
+### 6. GeoMatch (Locations and Areas)
+
+This is a relation between `Locations` and `Areas`. This is a **one-to-one** relation as each location will have one area and each area(with its latitude and longitude) will have its corresponding location. It has no additional attributes.
 
 ### 7. GeoTrend (Locations and Trends)
 
@@ -163,8 +166,8 @@ Users(
 )
 ```
 
-- **`UserId`** is the primary key.
-- All attributes are directly dependent on **`UserId`**.
+- `UserId` is the primary key.
+- All attributes are directly dependent on `UserId`.
 - No non-prime attribute determines another non-prime attribute. Thus, no transitive dependencies.
 
 ### 2. CrimeEvents
@@ -179,8 +182,8 @@ CrimeEvents(
 )
 ```
 
-- **`EventId`** is the primary key.
-- All attributes are directly dependent on **`EventId`**.
+- `EventId` is the primary key.
+- All attributes are directly dependent on `EventId`.
 - No transitive dependencies.
 
 ### 3. CrimeTypes
@@ -192,8 +195,8 @@ CrimeTypes(
 )
 ```
 
-- **`CrimeId`** is the primary key.
-- **`CrimeName`** is directly dependent on **`CrimeId`**.
+- `CrimeId` is the primary key.
+- `CrimeName` is directly dependent on `CrimeId`.
 - No transitive dependencies observed.
 
 ### 4. Locations
@@ -204,26 +207,28 @@ Locations(
 	LocationName VARCHAR(255),
 	Latitude DOUBLE,
 	Longitude DOUBLE,
-	AreaId INT [FK to Areas.AreaId],
+	Longitude [FK to Areas.Longitude]
+	Latitude [FK to Areas.Latitude]
 	PremisId INT [FK to LocationType.PremisId]
 )
 ```
 
-- **`LocationId`** is the primary key.
-- All attributes are directly dependent on **`LocationId`**.
+- `LocationId` is the primary key.
+- All attributes are directly dependent on `LocationId`.
 - No transitive dependencies observed.
 
 ### 5. Areas
 
 ```scheme
 Areas(
-	AreaId INT [PK],
+	Latitude [Composite PK],
+	Longitude [Composite PK],
 	AreaName VARCHAR(255)
 )
 ```
 
-- **`AreaId`** is the primary key.
-- **`AreaName`** is directly dependent on **`AreaId`**.
+- `(Longtitude, Latitude)` is the primary key.
+- `AreaName` is directly dependent on `(Longtitude, Latitude)`.
 - No transitive dependencies observed.
 
 ### 6. LocationTypes
@@ -235,8 +240,8 @@ LocationTypes(
 )
 ```
 
-- **`PremisId`** is the primary key.
-- **`PremisName`** is directly dependent on **`PremisId`**.
+- `PremisId` is the primary key.
+- `PremisName` is directly dependent on `PremisId`.
 - No transitive dependencies.
 
 ### 7. Trends
@@ -248,8 +253,8 @@ Trends(
 )
 ```
 
-- **`LocationId`** is the primary key.
-- **`Value`** is directly dependent on **`LocationId`**.
+- `LocationId` is the primary key.
+- `Value` is directly dependent on `LocationId`.
 - No transitive dependencies observed.
 
 ### 8. Favorites
@@ -261,7 +266,7 @@ Favorites(
 )
 ```
 
-- (**`UserId`**, **`LocationId`**) is the composite primary key.
+- (`UserId`, `LocationId`) is the composite primary key.
 - No other attributes. Thus, no transitive dependencies.
 
 ### 9. Report
@@ -275,8 +280,8 @@ Report(
 )
 ```
 
-- (**`LocationId`**, **`CrimeId`**) is the composite primary key.
-- **`Date`** and **`Time`** are directly dependent on the composite key.
+- (`LocationId`, `CrimeId`) is the composite primary key.
+- `Date` and `Time` are directly dependent on the composite key.
 - No transitive dependencies.
 
 <aside>
@@ -305,8 +310,10 @@ CREATE TABLE CrimeTypes (
 
 -- AREAS TABLE
 CREATE TABLE Areas (
-    AreaId INT PRIMARY KEY,
-    AreaName VARCHAR(255)
+		Longitude VARCHAR(255),
+    Latitude VARCHAR(255),
+    AreaName VARCHAR(255),
+    PRIMARY KEY (Longitude, Latitude)
 );
 
 -- LOCATION TYPES TABLE
@@ -319,9 +326,8 @@ CREATE TABLE LocationTypes (
 CREATE TABLE Locations (
     LocationId INTEGER PRIMARY KEY,
     LocationName VARCHAR(255),
-    Latitude VARCHAR(255),
-    Longitude VARCHAR(255),
-    AreaId INT REFERENCES Areas(AreaId),
+    Latitude VARCHAR(255) REFERENCES Areas(Latitude),
+    Longitude VARCHAR(255) REFERENCES Areas(Longitude),
     PremisId INT REFERENCES LocationTypes(PremisId)
 );
 
