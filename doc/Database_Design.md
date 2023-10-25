@@ -105,7 +105,7 @@ Here `Trends` is the new entity that we will obtain by applying mathematical mod
 
 ## Relations
 
-There are a total of 7 relations in our database design. It is explained in detail as follows:
+There are a total of 8 relations in our database design. It is explained in detail as follows:
 
 ### 1. Favorites (Users and Locations)
 
@@ -146,11 +146,11 @@ This is a relation between different crime events for given crime types. This is
 
 This is a relation between different crime events for given locations. This is a **many-to-one** relation as each crime event can only happen at one location but each location can have multiple crime events. The `ConsistCT` relation has no attributes. And since this is a many-to-one relation, we will not create a separate table for it. We will simply add `PremisId`, the primary key of `LocationTypes`, to `CrimeEvents` and add foreign key constraints.
 
-### 6. GeoMatch (Locations and Areas)
+### 7. GeoMatch (Locations and Areas)
 
 This is a relation between `Locations` and `Areas`. This is a **one-to-one** relation as each location will have one area and each area(with its latitude and longitude) will have its corresponding location. It has no additional attributes.
 
-### 7. GeoTrend (Locations and Trends)
+### 8. GeoTrend (Locations and Trends)
 
 This is a relation between `Trends` and `Locations`. This is a **one-to-one** relation as each location will have one trend and each trend will have a corresponding location. It has no additional attributes.
 
