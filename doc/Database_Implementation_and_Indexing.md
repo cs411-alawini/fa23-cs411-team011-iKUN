@@ -201,7 +201,7 @@ VALUES
 ![Advanced_pic3](SafeHome_Tracker_img/Advanced_pic3.png)
 
 ![Advanced_pic4](SafeHome_Tracker_img/Advanced_pic4.png)
-# Indexing
+## Indexing Analysis
 
 ### Advanced Query 1
 
