@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SafeHome Tracker - Trends</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{{ url_for('static', filename='img/tracker_icon.ico') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/tracker.css') }}">
+</head>
+
+<body>
+    <div class="d-flex justify-content-end pe-3 pt-3">
+        <span class="nav-link">
+            {% if 'email' in session %}
+                Hi! {{ session['email'] }}
+            {% endif %}
+        </span>
+        <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+    </div>
+    <main role="main" class="container extra-bottom">
+        <div class="py-1 text-center">
+            <h2>SafeHome Tracker</h2>
+            <p class="lead">Empowering you with real-time safety information for smarter travel in Los Angeles.</p>
+        </div>
+    
+        <nav class="nav nav-pills flex-column flex-sm-row">
+            <a class="flex-sm-fill text-sm-center nav-link" aria-current="page" href="{{ url_for('homepage') }}">Home</a>
+            <a class="flex-sm-fill text-sm-center nav-link active" href="{{ url_for('trends') }}">Trends</a>
+            <a class="flex-sm-fill text-sm-center nav-link" href="{{ url_for('report') }}">Report</a>
+            <a class="flex-sm-fill text-sm-center nav-link" href="{{ url_for('search') }}">Search</a>
+        </nav>
+    
+        <div id="content" class="mt-1">
+            <!-- Content will be dynamically injected here -->
+            <div id="iframeContainer">
+                <iframe src="\get_heatmap"></iframe>
+            </div>
+            <div class="text-center">
+                <button id="updatButton" class="btn btn-primary">Generate Latest Crime HeatMap</button>
+            </div>
+            <br></br>
+        </div>
+    </main>
+
+<footer class="footer mt-auto py-3 bg-light">
+    <div class="container">
+        <span class="text-muted"><small>SafeHome Tracker application developed by SafeHome Team.</small></span>
+    </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url_for('static', filename='scripts/tracker.js') }}"></script>
+
+<!-- 其他的HTML代码 -->
+
+<style>
+    #iframeContainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 70vh; /* Adjust this value as needed */
+        padding: 250px; /* Adjust this value as needed */
+    }
+
+    #iframeContainer iframe {
+        width: 100%; /* Adjust this value as needed */
+        height: 500px; /* Adjust this value as needed */
+    }
+</style>
+
+<script>
+    $(document).ready(function() {
+        $('#updatButton').click(function() {
+            // Send the AJAX request
+            $.ajax({
+                url: '/run_update',
+                type: 'GET',
+                success: function(response) {
+                    // If the request is successful, show an alert
+                    alert('Successfully updated the crime heatmap!');
+                    location.reload();
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+
+</html>
