@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Report Submission</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{{ url_for('static', filename='img/tracker_icon.ico') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/tracker.css') }}">
+</head>
+<body>
+    <div class="d-flex justify-content-end pe-3 pt-3">
+        <span class="nav-link">
+            {% if 'email' in session %}
+                Hi! {{ session['email'] }}
+            {% endif %}
+        </span>
+        <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+    </div>
+<main role="main" class="container extra-bottom">
+    <div class="py-1 text-center">
+        <h2>SafeHome Tracker</h2>
+        <p class="lead">Empowering you with real-time safety information for smarter travel in Los Angeles.</p>
+    </div>
+
+    <nav class="nav nav-pills flex-column flex-sm-row">
+        <a class="flex-sm-fill text-sm-center nav-link" aria-current="page" href="{{ url_for('homepage') }}">Home</a>
+        <a class="flex-sm-fill text-sm-center nav-link" href="{{ url_for('trends') }}">Trends</a>
+        <a class="flex-sm-fill text-sm-center nav-link active" href="{{ url_for('report') }}">Report</a>
+        <a class="flex-sm-fill text-sm-center nav-link" href="{{ url_for('search') }}">Search</a>
+    </nav>
+
+    <div id="content" class="mt-4">
+        <!-- Content will be dynamically injected here -->
+    </div>
+</main>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="signup-form bg-light mt-4 p-4">
+                <form action="/submit_report" method="post" class="row g-3">
+                    <h4>Submit a Crime</h4>
+                    <div class="col-12">
+                        <label>Location</label>
+                        <input type="string" name="LocationId" class="form-control" placeholder="Location Name" required>
+                    </div>
+                    <div class="col-12">
+                        <label>Crime Type</label>
+                        <select name="CrimeType" class="form-control" required>
+                            <option value="">Select a crime</option>
+                            <option value="648">ARSON</option>
+                            <option value="231">ASSAULT WITH DEADLY WEAPON ON POLICE OFFICER</option>
+                            <option value="230">ASSAULT WITH DEADLY WEAPON, AGGRAVATED ASSAULT</option>
+                            <option value="220">ATTEMPTED ROBBERY</option>
+                            <option value="624">BATTERY - SIMPLE ASSAULT</option>
+                            <option value="622">BATTERY ON A FIREFIGHTER</option>
+                            <option value="623">BATTERY POLICE (SIMPLE)</option>
+                            <option value="860">BATTERY WITH SEXUAL CONTACT</option>
+                            <option value="840">BEASTIALITY, CRIME AGAINST NATURE SEXUAL ASSLT WITH ANIM</option>
+                            <option value="485">BIKE - ATTEMPTED STOLEN</option>
+                            <option value="480">BIKE - STOLEN</option>
+                            <option value="487">BOAT - STOLEN</option>
+                            <option value="755">BOMB SCARE</option>
+                            <option value="761">BRANDISH WEAPON</option>
+                            <option value="942">BRIBERY</option>
+                            <option value="666">BUNCO, ATTEMPT</option>
+                            <option value="662">BUNCO, GRAND THEFT</option>
+                            <option value="664">BUNCO, PETTY THEFT</option>
+                            <option value="310">BURGLARY</option>
+                            <option value="330">BURGLARY FROM VEHICLE</option>
+                            <option value="410">BURGLARY FROM VEHICLE, ATTEMPTED</option>
+                            <option value="320">BURGLARY, ATTEMPTED</option>
+                            <option value="870">CHILD ABANDONMENT</option>
+                            <option value="235">CHILD ABUSE (PHYSICAL) - AGGRAVATED ASSAULT</option>
+                            <option value="627">CHILD ABUSE (PHYSICAL) - SIMPLE ASSAULT</option>
+                            <option value="813">CHILD ANNOYING (17YRS & UNDER)</option>
+                            <option value="237">CHILD NEGLECT (SEE 300 W.I.C.)</option>
+                            <option value="814">CHILD PORNOGRAPHY</option>
+                            <option value="922">CHILD STEALING</option>
+                            <option value="944">CONSPIRACY</option>
+                            <option value="903">CONTEMPT OF COURT</option>
+                            <option value="943">CONTRIBUTING</option>
+                            <option value="660">COUNTERFEIT</option>
+                            <option value="654">CREDIT CARDS, FRAUD USE ($950 & UNDER)</option>
+                            <option value="653">CREDIT CARDS, FRAUD USE ($950.01 & OVER)</option>
+                            <option value="110">CRIMINAL HOMICIDE</option>
+                            <option value="930">CRIMINAL THREATS - NO WEAPON DISPLAYED</option>
+                            <option value="812">CRM AGNST CHLD (13 OR UNDER) (14-15 & SUSP 10 YRS OLDER)</option>
+                            <option value="943">CRUELTY TO ANIMALS</option>
+                            <option value="951">DEFRAUDING INNKEEPER/THEFT OF SERVICES, $400 & UNDER</option>
+                            <option value="950">DEFRAUDING INNKEEPER/THEFT OF SERVICES, OVER $400</option>
+                            <option value="753">DISCHARGE FIREARMS/SHOTS FIRED</option>
+                            <option value="345">DISHONEST EMPLOYEE - GRAND THEFT</option>
+                            <option value="444">DISHONEST EMPLOYEE - PETTY THEFT</option>
+                            <option value="880">DISRUPT SCHOOL</option>
+                            <option value="886">DISTURBING THE PEACE</option>
+                            <option value="649">DOCUMENT FORGERY / STOLEN FELONY</option>
+                            <option value="652">DOCUMENT WORTHLESS ($200 & UNDER)</option>
+                            <option value="651">DOCUMENT WORTHLESS ($200.01 & OVER)</option>
+                            <option value="433">DRIVING WITHOUT OWNER CONSENT (DWOC)</option>
+                            <option value="865">DRUGS, TO A MINOR</option>
+                            <option value="353">DRUNK ROLL</option>
+                            <option value="668">EMBEZZLEMENT, GRAND THEFT ($950.01 & OVER)</option>
+                            <option value="670">EMBEZZLEMENT, PETTY THEFT ($950 & UNDER)</option>
+                            <option value="940">EXTORTION</option>
+                            <option value="890">FAILURE TO YIELD</option>
+                            <option value="434">FALSE IMPRISONMENT</option>
+                            <option value="439">FALSE POLICE REPORT</option>
+                            <option value="904">FIREARMS EMERGENCY PROTECTIVE ORDER (FIREARMS EPO)</option>
+                            <option value="906">FIREARMS RESTRAINING ORDER (FIREARMS RO)</option>
+                            <option value="349">GRAND THEFT / AUTO REPAIR</option>
+                            <option value="347">GRAND THEFT / INSURANCE FRAUD</option>
+                            <option value="822">HUMAN TRAFFICKING - COMMERCIAL SEX ACTS</option>
+                            <option value="921">HUMAN TRAFFICKING - INVOLUNTARY SERVITUDE</option>
+                            <option value="949">ILLEGAL DUMPING</option>
+                            <option value="830">INCEST (SEXUAL ACTS BETWEEN BLOOD RELATIVES)</option>
+                            <option value="850">INDECENT EXPOSURE</option>
+                            <option value="236">INTIMATE PARTNER - AGGRAVATED ASSAULT</option>
+                            <option value="626">INTIMATE PARTNER - SIMPLE ASSAULT</option>
+                            <option value="910">KIDNAPPING</option>
+                            <option value="920">KIDNAPPING - GRAND ATTEMPT</option>
+                            <option value="956">LETTERS, LEWD - TELEPHONE CALLS, LEWD</option>
+                            <option value="762">LEWD CONDUCT</option>
+                            <option value="760">LEWD/LASCIVIOUS ACTS WITH CHILD</option>
+                            <option value="435">LYNCHING</option>
+                            <option value="436">LYNCHING - ATTEMPTED</option>
+                            <option value="113">MANSLAUGHTER, NEGLIGENT</option>
+                            <option value="820">ORAL COPULATION</option>
+                            <option value="625">OTHER ASSAULT</option>
+                            <option value="946">OTHER MISCELLANEOUS CRIME</option>
+                            <option value="806">PANDERING</option>
+                            <option value="932">PEEPING TOM</option>
+                            <option value="446">PETTY THEFT - AUTO REPAIR</option>
+                            <option value="352">PICKPOCKET</option>
+                            <option value="452">PICKPOCKET, ATTEMPT</option>
+                            <option value="805">PIMPING</option>
+                            <option value="933">PROWLER</option>
+                            <option value="351">PURSE SNATCHING</option>
+                            <option value="451">PURSE SNATCHING - ATTEMPT</option>
+                            <option value="122">RAPE, ATTEMPTED</option>
+                            <option value="121">RAPE, FORCIBLE</option>
+                            <option value="438">RECKLESS DRIVING</option>
+                            <option value="931">REPLICA FIREARMS(SALE,DISPLAY,MANUFACTURE OR DISTRIBUTE)</option>
+                            <option value="437">RESISTING ARREST</option>
+                            <option value="210">ROBBERY</option>
+                            <option value="845">SEX OFFENDER REGISTRANT OUT OF COMPLIANCE</option>
+                            <option value="810">SEX,UNLAWFUL(INC MUTUAL CONSENT, PENETRATION W/ FRGN OBJ</option>
+                            <option value="815">SEXUAL PENETRATION W/FOREIGN OBJECT</option>
+                            <option value="443">SHOPLIFTING - ATTEMPT</option>
+                            <option value="442">SHOPLIFTING - PETTY THEFT ($950 & UNDER)</option>
+                            <option value="343">SHOPLIFTING-GRAND THEFT ($950.01 & OVER)</option>
+                            <option value="251">SHOTS FIRED AT INHABITED DWELLING</option>
+                            <option value="250">SHOTS FIRED AT MOVING VEHICLE, TRAIN OR AIRCRAFT</option>
+                            <option value="821">SODOMY/SEXUAL CONTACT B/W PENIS OF ONE PERS TO ANUS OTH</option>
+                            <option value="763">STALKING</option>
+                            <option value="924">TELEPHONE PROPERTY - DAMAGE</option>
+                            <option value="421">THEFT FROM MOTOR VEHICLE - ATTEMPT</option>
+                            <option value="331">THEFT FROM MOTOR VEHICLE - GRAND ($400 AND OVER)</option>
+                            <option value="420">THEFT FROM MOTOR VEHICLE - PETTY ($950 & UNDER)</option>
+                            <option value="450">THEFT FROM PERSON - ATTEMPT</option>
+                            <option value="354">THEFT OF IDENTITY</option>
+                            <option value="441">THEFT PLAIN - ATTEMPT</option>
+                            <option value="440">THEFT PLAIN - PETTY ($950 & UNDER)</option>
+                            <option value="475">THEFT, COIN MACHINE - ATTEMPT</option>
+                            <option value="473">THEFT, COIN MACHINE - GRAND ($950.01 & OVER)</option>
+                            <option value="474">THEFT, COIN MACHINE - PETTY ($950 & UNDER)</option>
+                            <option value="350">THEFT, PERSON</option>
+                            <option value="341">THEFT-GRAND ($950.01 & OVER)EXCPT,GUNS,FOWL,LIVESTK,PROD</option>
+                            <option value="928">THREATENING PHONE CALLS/LETTERS</option>
+                            <option value="647">THROWING OBJECT AT MOVING VEHICLE</option>
+                            <option value="470">TILL TAP - GRAND THEFT ($950.01 & OVER)</option>
+                            <option value="471">TILL TAP - PETTY ($950 & UNDER)</option>
+                            <option value="888">TRESPASSING</option>
+                            <option value="661">UNAUTHORIZED COMPUTER ACCESS</option>
+                            <option value="740">VANDALISM - FELONY ($400 & OVER, ALL CHURCH VANDALISMS)</option>
+                            <option value="745">VANDALISM - MISDEAMEANOR ($399 OR UNDER)</option>
+                            <option value="520">VEHICLE - ATTEMPT STOLEN</option>
+                            <option value="522">VEHICLE - MOTORIZED SCOOTERS, BICYCLES, AND WHEELCHAIRS</option>
+                            <option value="510">VEHICLE - STOLEN</option>
+                            <option value="900">VIOLATION OF COURT ORDER</option>
+                            <option value="901">VIOLATION OF RESTRAINING ORDER</option>
+                            <option value="902">VIOLATION OF TEMPORARY RESTRAINING ORDER</option>
+                            <option value="756">WEAPONS POSSESSION/BOMBING</option>
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <label>Location Type</label>
+                        <select name="LocationType" class="form-control" required>
+                            <option value="">Select a Location Type</option>
+                            <option value="835">7TH AND METRO CENTER (NOT LINE SPECIFIC)</option>
+                            <option value="506">ABANDONED BUILDING ABANDONED HOUSE</option>
+                            <option value="513">ABATEMENT LOCATION</option>
+                            <option value="227">ABORTION CLINIC/ABORTION FACILITY*</option>
+                            <option value="115">AIRCRAFT</option>
+                            <option value="103">ALLEY</option>
+                            <option value="810">AMTRAK TRAIN</option>
+                            <option value="139">AMUSEMENT PARK*</option>
+                            <option value="515">APARTMENT/CONDO COMMON LAUNDRY ROOM</option>
+                            <option value="711">ARCADE,GAME ROOM/VIDEO GAMES (EXAMPLE CHUCKIE CHEESE)*</option>
+                            <option value="255">AUTO DEALERSHIP (CHEVY, FORD, BMW, MERCEDES, ETC.)</option>
+                            <option value="217">AUTO REPAIR SHOP</option>
+                            <option value="208">AUTO SALES LOT</option>
+                            <option value="408">AUTO SUPPLY STORE*</option>
+                            <option value="605">AUTOMATED TELLER MACHINE (ATM)</option>
+                            <option value="140">BALCONY*</option>
+                            <option value="602">BANK</option>
+                            <option value="608">BANK DROP BOX/MONEY DROP-OUTSIDE OF BANK*</option>
+                            <option value="607">BANKING INSIDE MARKET-STORE *</option>
+                            <option value="207">BAR/COCKTAIL/NIGHTCLUB</option>
+                            <option value="733">BAR/SPORTS BAR (OPEN DAY & NIGHT)</option>
+                            <option value="757">BASKETBALL COURTS</option>
+                            <option value="117">BEACH</option>
+                            <option value="409">BEAUTY SUPPLY STORE</option>
+                            <option value="218">BEAUTY/BARBER SHOP</option>
+                            <option value="414">BOOK STORE</option>
+                            <option value="228">BOWLING ALLEY*</option>
+                            <option value="214">BUS DEPOT/TERMINAL, OTHER THAN MTA</option>
+                            <option value="124">BUS STOP</option>
+                            <option value="128">BUS STOP/LAYOVER (ALSO QUERY 124)</option>
+                            <option value="112">BUS, SCHOOL, CHURCH</option>
+                            <option value="111">BUS-CHARTER/PRIVATE</option>
+                            <option value="247">CAR WASH</option>
+                            <option value="245">CATERING/ICE CREAM TRUCK</option>
+                            <option value="248">CELL PHONE STORE</option>
+                            <option value="141">CEMETARY*</option>
+                            <option value="229">CHECK CASHING*</option>
+                            <option value="305">CHEMICAL STORAGE/MANUFACTURING PLANT</option>
+                            <option value="708">CHURCH/CHAPEL (CHANGED 03-03 FROM CHURCH/TEMPLE)</option>
+                            <option value="219">CLEANER/LAUNDROMAT</option>
+                            <option value="405">CLOTHING STORE</option>
+                            <option value="252">COFFEE SHOP (STARBUCKS, COFFEE BEAN, PEET'S, ETC.)</option>
+                            <option value="712">COLISEUM</option>
+                            <option value="722">COLLEGE/JUNIOR COLLEGE/UNIVERSITY</option>
+                            <option value="250">COMPUTER SERVICES/REPAIRS/SALES</option>
+                            <option value="507">CONDOMINIUM/TOWNHOUSE</option>
+                            <option value="118">CONSTRUCTION SITE</option>
+                            <option value="713">CONVENTION CENTER</option>
+                            <option value="603">CREDIT UNION</option>
+                            <option value="748">CULTURAL SIGNIFICANCE/MONUMENT</option>
+                            <option value="750">CYBERSPACE</option>
+                            <option value="155">DAM/RESERVOIR</option>
+                            <option value="230">DAY CARE/ADULTS*</option>
+                            <option value="231">DAY CARE/CHILDREN*</option>
+                            <option value="232">DELIVERY SERVICE (FED EX, UPS, COURIERS,COURIER SERVICE)*</option>
+                            <option value="404">DEPARTMENT STORE</option>
+                            <option value="240">DEPT OF DEFENSE FACILITY</option>
+                            <option value="753">DETENTION/JAIL FACILITY</option>
+                            <option value="242">DISCOUNT STORE (99 CENT,DOLLAR,ETC.</option>
+                            <option value="243">DIY CENTER (LOWE'S,HOME DEPOT,OSH,CONTRACTORS WAREHOUSE)</option>
+                            <option value="714">DODGER STADIUM</option>
+                            <option value="606">DRIVE THRU BANKING (WINDOW)*</option>
+                            <option value="142">DRIVE THRU*</option>
+                            <option value="104">DRIVEWAY</option>
+                            <option value="403">DRUG STORE</option>
+                            <option value="412">ELECTRONICS STORE (IE:RADIO SHACK, ETC.)</option>
+                            <option value="704">ELEMENTARY SCHOOL</option>
+                            <option value="728">ELEVATOR</option>
+                            <option value="241">ENERGY PLANT/FACILITY</option>
+                            <option value="703">ENTERTAINMENT/COMEDY CLUB (OTHER)</option>
+                            <option value="209">EQUIPMENT RENTAL</option>
+                            <option value="143">ESCALATOR*</option>
+                            <option value="302">FACTORY</option>
+                            <option value="604">FINANCE COMPANY</option>
+                            <option value="752">FIRE STATION</option>
+                            <option value="512">FOSTER HOME BOYS OR GIRLS*</option>
+                            <option value="508">FRAT HOUSE/SORORITY/DORMITORY</option>
+                            <option value="110">FREEWAY</option>
+                            <option value="413">FURNITURE STORE</option>
+                            <option value="707">GARAGE/CARPORT</option>
+                            <option value="304">GARMENT MANUFACTURER</option>
+                            <option value="301">GAS STATION</option>
+                            <option value="144">GOLF COURSE*</option>
+                            <option value="725">GOVERNMENT FACILITY (FEDERAL,STATE, COUNTY & CITY)</option>
+                            <option value="804">GREYHOUND OR INTERSTATE BUS</option>
+                            <option value="514">GROUP HOME</option>
+                            <option value="205">GUN/SPORTING GOODS</option>
+                            <option value="758">HANDBALL COURTS</option>
+                            <option value="407">HARDWARE/BUILDING SUPPLY</option>
+                            <option value="717">HEALTH SPA/GYM</option>
+                            <option value="721">HIGH SCHOOL</option>
+                            <option value="744">HIGH-RISE BUILDING</option>
+                            <option value="715">HORSE RACING/SANTA ANITA PARK*</option>
+                            <option value="237">HOSPICE</option>
+                            <option value="701">HOSPITAL</option>
+                            <option value="503">HOTEL</option>
+                            <option value="201">JEWELRY STORE</option>
+                            <option value="720">JUNIOR HIGH SCHOOL</option>
+                            <option value="834">LA UNION STATION (NOT LINE SPECIFIC)</option>
+                            <option value="222">LAUNDROMAT</option>
+                            <option value="738">LIBRARY</option>
+                            <option value="202">LIQUOR STORE</option>
+                            <option value="145">MAIL BOX</option>
+                            <option value="204">MANUFACTURING COMPANY</option>
+                            <option value="402">MARKET</option>
+                            <option value="743">MASS GATHERING LOCATION</option>
+                            <option value="718">MASSAGE PARLOR</option>
+                            <option value="239">MEDICAL MARIJUANA FACILITIES/BUSINESSES</option>
+                            <option value="719">MEDICAL/DENTAL OFFICES</option>
+                            <option value="410">MEMBERSHIP STORE (COSTCO,SAMS CLUB)*</option>
+                            <option value="246">METHADONE CLINIC</option>
+                            <option value="809">METROLINK TRAIN</option>
+                            <option value="401">MINI-MART</option>
+                            <option value="517">MISSIONS/SHELTERS</option>
+                            <option value="509">MOBILE HOME/TRAILERS/CONSTRUCTION TRAILERS/RV'S/MOTORHOME</option>
+                            <option value="253">MORTUARY</option>
+                            <option value="731">MOSQUE*</option>
+                            <option value="505">MOTEL</option>
+                            <option value="937">MTA - BLUE LINE - 103RD/WATTS TOWERS</option>
+                            <option value="931">MTA - BLUE LINE - 7TH AND METRO CENTER</option>
+                            <option value="933">MTA - BLUE LINE - GRAND/LATTC</option>
+                            <option value="932">MTA - BLUE LINE - PICO</option>
+                            <option value="934">MTA - BLUE LINE - SAN PEDRO</option>
+                            <option value="936">MTA - BLUE LINE - VERNON</option>
+                            <option value="935">MTA - BLUE LINE - WASHINGTON</option>
+                            <option value="940">MTA - EXPO LINE - 7TH AND METRO CENTER</option>
+                            <option value="944">MTA - EXPO LINE - EXPO PARK/USC</option>
+                            <option value="954">MTA - EXPO LINE - EXPO/BUNDY</option>
+                            <option value="947">MTA - EXPO LINE - EXPO/CRENSHAW</option>
+                            <option value="949">MTA - EXPO LINE - EXPO/LA BREA</option>
+                            <option value="953">MTA - EXPO LINE - EXPO/SEPULVEDA</option>
+                            <option value="945">MTA - EXPO LINE - EXPO/VERMONT</option>
+                            <option value="946">MTA - EXPO LINE - EXPO/WESTERN</option>
+                            <option value="948">MTA - EXPO LINE - FARMDALE</option>
+                            <option value="943">MTA - EXPO LINE - JEFFERSON/USC</option>
+                            <option value="950">MTA - EXPO LINE - LA CIENEGA/JEFFERSON</option>
+                            <option value="942">MTA - EXPO LINE - LATTC/ORTHO INSTITUTE</option>
+                            <option value="951">MTA - EXPO LINE - PALMS</option>
+                            <option value="941">MTA - EXPO LINE - PICO</option>
+                            <option value="952">MTA - EXPO LINE - WESTWOOD/RANCHO PARK</option>
+                            <option value="967">MTA - GOLD LINE - CHINATOWN</option>
+                            <option value="969">MTA - GOLD LINE - HERITAGE SQ</option>
+                            <option value="971">MTA - GOLD LINE - HIGHLAND PARK</option>
+                            <option value="961">MTA - GOLD LINE - INDIANA</option>
+                            <option value="968">MTA - GOLD LINE - LINCOLN/CYPRESS</option>
+                            <option value="965">MTA - GOLD LINE - LITTLE TOKYO/ARTS DISTRICT</option>
+                            <option value="963">MTA - GOLD LINE - MARIACHI PLAZA</option>
+                            <option value="964">MTA - GOLD LINE - PICO/ALISO</option>
+                            <option value="962">MTA - GOLD LINE - SOTO</option>
+                            <option value="970">MTA - GOLD LINE - SOUTHWEST MUSEUM</option>
+                            <option value="966">MTA - GOLD LINE - UNION STATION</option>
+                            <option value="956">MTA - GREEN LINE - AVALON</option>
+                            <option value="958">MTA - GREEN LINE - AVIATION/LAX</option>
+                            <option value="957">MTA - GREEN LINE - HARBOR FWY</option>
+                            <option value="875">MTA - ORANGE LINE - BALBOA</option>
+                            <option value="880">MTA - ORANGE LINE - CANOGA</option>
+                            <option value="885">MTA - ORANGE LINE - CHATSWORTH</option>
+                            <option value="879">MTA - ORANGE LINE - DE SOTO</option>
+                            <option value="869">MTA - ORANGE LINE - LAUREL CANYON</option>
+                            <option value="884">MTA - ORANGE LINE - NORDHOFF</option>
+                            <option value="868">MTA - ORANGE LINE - NORTH HOLLYWOOD</option>
+                            <option value="878">MTA - ORANGE LINE - PIERCE COLLEGE</option>
+                            <option value="876">MTA - ORANGE LINE - RESEDA</option>
+                            <option value="883">MTA - ORANGE LINE - ROSCOE</option>
+                            <option value="873">MTA - ORANGE LINE - SEPULVEDA</option>
+                            <option value="882">MTA - ORANGE LINE - SHERMAN WAY</option>
+                            <option value="877">MTA - ORANGE LINE - TAMPA</option>
+                            <option value="870">MTA - ORANGE LINE - VALLEY COLLEGE</option>
+                            <option value="872">MTA - ORANGE LINE - VAN NUYS</option>
+                            <option value="874">MTA - ORANGE LINE - WOODLEY</option>
+                            <option value="871">MTA - ORANGE LINE - WOODMAN</option>
+                            <option value="918">MTA - PURPLE LINE - 7TH AND METRO CENTER</option>
+                            <option value="916">MTA - PURPLE LINE - CIVIC CENTER/GRAND PARK</option>
+                            <option value="917">MTA - PURPLE LINE - PERSHING SQUARE</option>
+                            <option value="915">MTA - PURPLE LINE - UNION STATION</option>
+                            <option value="919">MTA - PURPLE LINE - WESTLAKE/MACARTHUR PARK</option>
+                            <option value="921">MTA - PURPLE LINE - WILSHIRE/NORMANDIE</option>
+                            <option value="920">MTA - PURPLE LINE - WILSHIRE/VERMONT</option>
+                            <option value="922">MTA - PURPLE LINE - WILSHIRE/WESTERN</option>
+                            <option value="903">MTA - RED LINE - 7TH AND METRO CENTER</option>
+                            <option value="901">MTA - RED LINE - CIVIC CENTER/GRAND PARK</option>
+                            <option value="911">MTA - RED LINE - HOLLYWOOD/HIGHLAND</option>
+                            <option value="910">MTA - RED LINE - HOLLYWOOD/VINE</option>
+                            <option value="909">MTA - RED LINE - HOLLYWOOD/WESTERN</option>
+                            <option value="913">MTA - RED LINE - NORTH HOLLYWOOD</option>
+                            <option value="902">MTA - RED LINE - PERSHING SQUARE</option>
+                            <option value="900">MTA - RED LINE - UNION STATION</option>
+                            <option value="912">MTA - RED LINE - UNIVERSAL CITY/STUDIO CITY</option>
+                            <option value="906">MTA - RED LINE - VERMONT/BEVERLY</option>
+                            <option value="907">MTA - RED LINE - VERMONT/SANTA MONICA</option>
+                            <option value="908">MTA - RED LINE - VERMONT/SUNSET</option>
+                            <option value="904">MTA - RED LINE - WESTLAKE/MACARTHUR PARK</option>
+                            <option value="905">MTA - RED LINE - WILSHIRE/VERMONT</option>
+                            <option value="892">MTA - SILVER LINE - 37TH ST/USC</option>
+                            <option value="891">MTA - SILVER LINE - DOWNTOWN STREET STOPS</option>
+                            <option value="895">MTA - SILVER LINE - HARBOR FWY</option>
+                            <option value="897">MTA - SILVER LINE - HARBOR GATEWAY TRANSIT CTR</option>
+                            <option value="889">MTA - SILVER LINE - LAC/USC MEDICAL CENTER</option>
+                            <option value="898">MTA - SILVER LINE - PACIFIC COAST HWY</option>
+                            <option value="896">MTA - SILVER LINE - ROSECRANS</option>
+                            <option value="893">MTA - SILVER LINE - SLAUSON</option>
+                            <option value="890">MTA - SILVER LINE - UNION STATION</option>
+                            <option value="801">MTA BUS</option>
+                            <option value="135">MTA PROPERTY OR PARKING LOT</option>
+                            <option value="502">MULTI-UNIT DWELLING (APARTMENT, DUPLEX, ETC)</option>
+                            <option value="802">MUNICIPAL BUS LINE INCLUDES LADOT/DASH</option>
+                            <option value="756">MUSCLE BEACH</option>
+                            <option value="754">MUSEUM</option>
+                            <option value="220">NAIL SALON</option>
+                            <option value="735">NIGHT CLUB (OPEN EVENINGS ONLY)</option>
+                            <option value="249">NURSERY/FLOWER SHOP</option>
+                            <option value="510">NURSING/CONVALESCENT/RETIREMENT HOME</option>
+                            <option value="702">OFFICE BUILDING/OFFICE</option>
+                            <option value="303">OIL REFINERY</option>
+                            <option value="234">OPTICAL OFFICE INSIDE STORE OR SUPERMARKET*</option>
+                            <option value="203">OTHER BUSINESS</option>
+                            <option value="136">OTHER INTERSTATE, CHARTER BUS</option>
+                            <option value="740">OTHER PLACE OF WORSHIP</option>
+                            <option value="710">OTHER PREMISE</option>
+                            <option value="504">OTHER RESIDENCE</option>
+                            <option value="811">OTHER RR TRAIN (UNION PAC, SANTE FE ETC</option>
+                            <option value="406">OTHER STORE</option>
+                            <option value="116">OTHER/OUTSIDE</option>
+                            <option value="109">PARK/PLAYGROUND</option>
+                            <option value="108">PARKING LOT</option>
+                            <option value="123">PARKING UNDERGROUND/BUILDING</option>
+                            <option value="146">PATIO*</option>
+                            <option value="211">PAWN SHOP</option>
+                            <option value="125">PAY PHONE</option>
+                            <option value="105">PEDESTRIAN OVERCROSSING</option>
+                            <option value="411">PET STORE</option>
+                            <option value="235">PHARMACY INSIDE STORE OR SUPERMARKET*</option>
+                            <option value="726">POLICE FACILITY</option>
+                            <option value="147">POOL-PUBLIC/OUTDOOR OR INDOOR*</option>
+                            <option value="119">PORCH, RESIDENTIAL</option>
+                            <option value="732">POST OFFICE</option>
+                            <option value="723">PRIVATE SCHOOL/PRESCHOOL</option>
+                            <option value="511">PROJECT/TENEMENT/PUBLIC HOUSING</option>
+                            <option value="709">PUBLIC RESTROOM(INDOORS-INSIDE)</option>
+                            <option value="148">PUBLIC RESTROOM/OUTSIDE*</option>
+                            <option value="221">PUBLIC STORAGE</option>
+                            <option value="225">RECORD-CD MUSIC/COMPUTER GAME STORE</option>
+                            <option value="251">RECYCLING CENTER</option>
+                            <option value="210">RESTAURANT/FAST FOOD</option>
+                            <option value="803">RETIRED (DUPLICATE) DO NOT USE THIS CODE</option>
+                            <option value="149">RIVER BED*</option>
+                            <option value="601">SAVINGS & LOAN</option>
+                            <option value="746">SEWAGE FACILITY/PIPE</option>
+                            <option value="706">SEX ORIENTED/BOOK STORE/STRIP CLUB/GENTLEMAN'S CLUB</option>
+                            <option value="727">SHOPPING MALL (COMMON AREA)</option>
+                            <option value="519">SHORT-TERM VACATION RENTAL</option>
+                            <option value="102">SIDEWALK</option>
+                            <option value="501">SINGLE FAMILY DWELLING</option>
+                            <option value="516">SINGLE RESIDENCE OCCUPANCY (SRO'S) LOCATIONS</option>
+                            <option value="736">SKATEBOARD FACILITY/SKATEBOARD PARK*</option>
+                            <option value="737">SKATING RINK*</option>
+                            <option value="705">SLIPS/DOCK/MARINA/BOAT</option>
+                            <option value="729">SPECIALTY SCHOOL/OTHER</option>
+                            <option value="739">SPORTS ARENA</option>
+                            <option value="742">SPORTS VENUE, OTHER</option>
+                            <option value="138">STAIRWELL*</option>
+                            <option value="741">STAPLES CENTER *</option>
+                            <option value="120">STORAGE SHED</option>
+                            <option value="101">STREET</option>
+                            <option value="254">STUDIO (FILM/PHOTOGRAPHIC/MUSIC)</option>
+                            <option value="224">SURPLUS SURVIVAL STORE</option>
+                            <option value="216">SWAP MEET</option>
+                            <option value="730">SYNAGOGUE/TEMPLE</option>
+                            <option value="233">TATTOO PARLOR*</option>
+                            <option value="114">TAXI</option>
+                            <option value="238">TELECOMMUNICATION FACILITY/LOCATION</option>
+                            <option value="129">TERMINAL, OTHER THAN MTA</option>
+                            <option value="416">THE BEVERLY CENTER</option>
+                            <option value="417">THE BEVERLY CONNECTION</option>
+                            <option value="415">THE GROVE</option>
+                            <option value="716">THEATRE/MOVIE</option>
+                            <option value="244">TOBACCO SHOP</option>
+                            <option value="150">TOOL SHED*</option>
+                            <option value="151">TOW YARD*</option>
+                            <option value="724">TRADE SCHOOL (MEDICAL-TECHNICAL-BUSINESS)*</option>
+                            <option value="215">TRAIN DEPOT/TERMINAL, OTHER THAN MTA</option>
+                            <option value="154">TRAIN TRACKS</option>
+                            <option value="126">TRAIN, OTHER THAN MTA (ALSO QUERY 809/810/811)</option>
+                            <option value="158">TRANSIENT ENCAMPMENT</option>
+                            <option value="518">TRANSITIONAL HOUSING/HALFWAY HOUSE</option>
+                            <option value="212">TRANSPORTATION FACILITY (AIRPORT)</option>
+                            <option value="127">TRASH CAN/TRASH DUMPSTER</option>
+                            <option value="113">TRUCK, COMMERICAL</option>
+                            <option value="106">TUNNEL</option>
+                            <option value="206">TV/RADIO/APPLIANCE</option>
+                            <option value="152">UNDERPASS/BRIDGE*</option>
+                            <option value="107">VACANT LOT</option>
+                            <option value="156">VALET</option>
+                            <option value="157">VEHICLE STORAGE LOT (CARS, TRUCKS, RV'S, BOATS, TRAILERS, ETC.)</option>
+                            <option value="122">VEHICLE, PASSENGER/TRUCK</option>
+                            <option value="755">VETERINARIAN/ANIMAL HOSPITAL</option>
+                            <option value="223">VIDEO RENTAL STORE</option>
+                            <option value="236">VISION CARE FACILITY*</option>
+                            <option value="213">WAREHOUSE</option>
+                            <option value="745">WATER FACILITY</option>
+                            <option value="751">WEBSITE</option>
+                            <option value="121">YARD (RESIDENTIAL/BUSINESS)</option>
+                            <option value="256">OTHER</option>
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <label>Date</label>
+                        <input type="date" name="Date" class="form-control" required>
+                    </div>
+                    <div class="col-12">
+                        <label>Time</label>
+                        <input type="time" name="Time" class="form-control" required>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-dark float-end">Submit</button>
+                    </div>
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            <ul class=list-unstyled>
+                                {% for category, message in messages %}
+                                    <li class="{{ category }}">{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    {% endwith %}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<br> </br>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+<footer class="footer mt-auto py-3 bg-light">
+    <div class="container">
+        <span class="text-muted"><small>SafeHome Tracker application developed by SafeHome Team.</small></span>
+    </div>
+</footer>
+
+</html>

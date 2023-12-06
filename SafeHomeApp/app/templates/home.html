@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SafeHome Tracker</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{{ url_for('static', filename='img/tracker_icon.ico') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/tracker.css') }}">
+</head>
+<body>
+    <div class="d-flex justify-content-end pe-3 pt-3">
+        <span class="nav-link">
+            {% if 'email' in session %}
+                Hi! {{ session['email'] }}
+            {% endif %}
+        </span>
+        <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+    </div>
+<main role="main" class="container extra-bottom">
+    <div class="py-1 text-center">
+        <h2>SafeHome Tracker</h2>
+        <p class="lead">Empowering you with real-time safety information for smarter travel in Los Angeles.</p>
+    </div>
+
+    <nav class="nav nav-pills flex-column flex-sm-row">
+        <a class="flex-sm-fill text-sm-center nav-link active" aria-current="page" href="{{ url_for('homepage') }}">Home</a>
+        <a class="flex-sm-fill text-sm-center nav-link" href="{{ url_for('trends') }}">Trends</a>
+        <a class="flex-sm-fill text-sm-center nav-link" href="{{ url_for('report') }}">Report</a>
+        <a class="flex-sm-fill text-sm-center nav-link" href="{{ url_for('search') }}">Search</a>
+    </nav>
+
+    <div id="content" class="mt-4">
+        <div class="row justify-content-center">
+            <div class="col-3">
+                <input id="input1" type="text" placeholder="Enter Origin" class="form-control">
+            </div>
+            <div class="col-3">
+                <input id="input2" type="text" placeholder="Enter Destination" class="form-control">
+            </div>
+            <div class="col-auto">
+                <button id="loadButton" class="btn btn-primary">Load Map</button>
+            </div>
+            <div class="col-auto">
+                <button id="likeButton" class="btn btn-primary">Like Destination</button>
+            </div>
+        </div>
+        <style>
+            #iframeContainer {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 70vh; /* Adjust this value as needed */
+                padding: 10px; /* Adjust this value as needed */
+            }
+        
+            #iframeContainer iframe {
+                width: 100%; /* Adjust this value as needed */
+                height: 500px; /* Adjust this value as needed */
+            }
+        </style>
+        <style>
+            #favouriteLocations {
+                margin-top: 10px; /* Adjust this value as needed */
+            }
+        </style>
+        <div class="row justify-content-center">
+            <div class="col-3">
+                <br> <br />
+                <h5>Your Favourite Locations</h5>
+                <table id="favouriteLocations" class="table">
+                    <thead>
+                        <tr>
+                            <th>Location</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- The favourite locations will be added here -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-6">
+                <div id="iframeContainer">
+                    <iframe src="\get_map_default"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+<footer class="footer mt-auto py-3 bg-light">
+    <div class="container">
+        <span class="text-muted"><small>SafeHome Tracker application developed by SafeHome Team.</small></span>
+    </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url_for('static', filename='scripts/tracker.js') }}"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#loadButton').click(function() {
+            var input1 = $('#input1').val();
+            var input2 = $('#input2').val();
+    
+            $.ajax({
+                url: '/get_map',
+                type: 'POST',
+                data: {
+                    'input1': input1,
+                    'input2': input2
+                },
+                success: function(response) {
+                    $('#iframeContainer iframe').contents().find('html').html(response);
+                    $('#iframeContainer').show();
+                }
+            });
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('#likeButton').click(function() {
+            // Get the destination text
+            var destination = $('#input2').val();
+
+            // Check if the destination is blank
+            if (destination == '') {
+                // If the destination is blank, show an alert and stop the function
+                alert('Please Input Destination');
+                updateFavouriteLocations();
+                return;
+            }
+            // Send the AJAX request
+            $.ajax({
+                url: '/like_destination',
+                type: 'POST',
+                data: {
+                    'destination': destination
+                },
+                success: function(response) {
+                    // If the request is successful, show an alert
+                    alert('Added to Your Favourite location.');
+                    location.reload();
+                }
+            });
+        });
+    });
+</script>
+
+<script>
+    // $(document).ready(function() {
+    //     // Function to update favourite locations
+    //     function updateFavouriteLocations() {
+    //         $.ajax({
+    //             url: '/get_favourite_locations',
+    //             type: 'GET',
+    //             success: function(response) {
+    //                 // Clear the list
+    //                 $('#favouriteLocations').empty();
+
+    //                 // Add each location to the list
+    //                 $.each(response, function(index, location) {
+    //                     $('#favouriteLocations').append('<li>' + location + '</li>');
+    //                 });
+    //             }
+    //         });
+    //     }
+
+    //     // Call the function when the page first loads
+    //     updateFavouriteLocations();
+    // });
+
+        $(document).ready(function() {
+        // Function to update favourite locations
+        function updateFavouriteLocations() {
+            $.ajax({
+                url: '/get_favourite_locations',
+                type: 'GET',
+                success: function(response) {
+                    // Clear the table
+                    $('#favouriteLocations tbody').empty();
+
+                    // Add each location to the table
+                    $.each(response, function(index, location) {
+                        $('#favouriteLocations tbody').append(
+                            '<tr>' +
+                                '<td>' + location + '</td>' +
+                                '<td>' +
+                                    '<button class="btn btn-primary btn-sm update-button mr-4">Update</button>' +
+                                    '<button class="btn btn-danger btn-sm delete-button">Delete</button>' +
+                                '</td>' +
+                            '</tr>'
+                        );
+                    });
+                }
+            });
+        }
+
+        // Call the function when the page first loads
+        updateFavouriteLocations();
+
+        // Add click event to the delete buttons
+        $('#favouriteLocations').on('click', '.delete-button', function() {
+            var location = $(this).closest('tr').find('td:first').text();
+            $.ajax({
+                url: '/delete_favourite_location',
+                type: 'POST',
+                data: {
+                    'location': location
+                },
+                success: function(response) {
+                    // Reload the favourite locations
+                    updateFavouriteLocations();
+                }
+            });
+        });
+
+        // Add click event to the update buttons
+        $('#favouriteLocations').on('click', '.update-button', function() {
+            var location = $(this).closest('tr').find('td:first').text();
+            var new_location = prompt("Please enter the new location name:", location);
+            $.ajax({
+                url: '/update_favourite_location',
+                type: 'POST',
+                data: {
+                    'location': location,
+                    'new_location': new_location
+                },
+                success: function(response) {
+                    // Reload the favourite locations
+                    updateFavouriteLocations();
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

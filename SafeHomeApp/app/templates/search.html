@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>SafeHome Tracker - Search</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" href="{{ url_for('static', filename='img/tracker_icon.ico') }}">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.css">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/tracker.css') }}">
+    </head>
+    <body>
+        <div class="d-flex justify-content-end pe-3 pt-3">
+            <span class="nav-link">
+                {% if 'email' in session %}
+                    Hi! {{ session['email'] }}
+                {% endif %}
+            </span>
+            <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+        </div>
+        <main role="main" class="container extra-bottom">
+            <div class="py-1 text-center">
+                <h2>SafeHome Tracker</h2>
+                <p class="lead">Empowering you with real-time safety information for smarter travel in Los Angeles.</p>
+            </div>
+
+            <nav class="nav nav-pills flex-column flex-sm-row">
+                <a class="flex-sm-fill text-sm-center nav-link" href="{{ url_for('homepage') }}">Home</a>
+                <a class="flex-sm-fill text-sm-center nav-link" href="{{ url_for('trends') }}">Trends</a>
+                <a class="flex-sm-fill text-sm-center nav-link" href="{{ url_for('report') }}">Report</a>
+                <a class="flex-sm-fill text-sm-center nav-link active" aria-current="page" href="{{ url_for('search') }}">Search</a>
+            </div>
+        </main>
+
+        <div class="container mt-4">
+            <h3>Search for Crimes in Your Area</h3>
+
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" id="crime-input" placeholder="Describe the Crime or Leave Blank for All Crime Types">
+            </div>
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="area-label">Select the Area</span>
+            </div>
+            <div class="input-group mb-3">
+                <select class="form-control" id="area-input">
+                    <option value="Hollenbeck">Hollenbeck</option>
+                    <option value="Northeast">Northeast</option>
+                    <option value="Harbor">Harbor</option>
+                    <option value="Newton">Newton</option>
+                    <option value="Central">Central</option>
+                    <option value="Southeast">Southeast</option>
+                    <option value="Rampart">Rampart</option>
+                    <option value="77th Street">77th Street</option>
+                    <option value="Mission">Mission</option>
+                    <option value="Foothill">Foothill</option>
+                    <option value="Southwest">Southwest</option>
+                    <option value="Olympic">Olympic</option>
+                    <option value="Hollywood">Hollywood</option>
+                    <option value="Wilshire">Wilshire</option>
+                    <option value="N Hollywood">N Hollywood</option>
+                    <option value="Pacific">Pacific</option>
+                    <option value="West LA">West LA</option>
+                    <option value="Van Nuys">Van Nuys</option>
+                    <option value="West Valley">West Valley</option>
+                    <option value="Devonshire">Devonshire</option>
+                    <option value="Topanga">Topanga</option>
+                </select>
+            </div>
+
+            <button class="btn btn-primary" id="search-button">Start Search</button>
+        </div>
+
+        <div class="container mt-4">
+            <table class="table" id="search-results">
+                <thead>
+                    <tr>
+                        <th>Type of Crime</th>
+                        <th>Address</th>
+                        <th>Date</th>
+                        <!-- Add more columns as needed -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Search results will be added here -->
+                </tbody>
+            </table>
+        </div>
+
+        <footer class="footer mt-auto py-3 bg-light">
+            <div class="container">
+                <span class="text-muted"><small>SafeHome Tracker application developed by SafeHome Team.</small></span>
+            </div>
+        </footer>  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="{{ url_for('static', filename='scripts/tracker.js') }}"></script>
+
+        <script>
+            $(document).ready(function() {
+            // Function to update search results
+            function updateSearchResults(results) {
+                // Clear the table
+                $('#search-results tbody').empty();
+
+                // Add each result to the table
+                $.each(results, function(index, result) {
+                    $('#search-results tbody').append(
+                        '<tr>' +
+                            '<td>' + result[0] + '</td>' +
+                            '<td>' + result[1] + '</td>' +
+                            '<td>' + new Date(result[2]).toLocaleDateString() + '</td>' +
+                        '</tr>'
+                    );
+                });
+            }
+
+            // Add click event to the search button
+            $('#search-button').click(function() {
+                var crimeType = $('#crime-input').val();
+                var area = $('#area-input').val();
+
+                $.ajax({
+                    url: '/search_crime',
+                    type: 'POST',
+                    data: {
+                        'crime_type': crimeType,
+                        'area': area
+                    },
+                    success: function(response) {
+                        // Update the search results
+                        updateSearchResults(JSON.parse(response));
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+            });
+        });
+        </script>
+    </body>
+</html>

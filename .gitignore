@@ -1,0 +1,5 @@
+.gitgnore
+.DS_Store
+.venv
+.idea
+__pycache__
