@@ -45,7 +45,7 @@ def report_submit(lat, lng, location_name, crime_id, crime_date, crime_time, Pre
     query_results = conn.execute(query).fetchall()
     if len(query_results) == 0:
         # insert new location
-        query = 'SELECT MAX(LocationId) FROM Reports;'
+        query = 'SELECT MAX(LocationId) FROM Locations;'
         result = conn.execute(query).fetchone()
         max_id = result[0] if result[0] else '10000'
         base_id = int(max_id)
@@ -56,14 +56,14 @@ def report_submit(lat, lng, location_name, crime_id, crime_date, crime_time, Pre
         # insert new location
         query = 'INSERT INTO Locations (LocationId, LocationName, Latitude, Longitude, PremisId) VALUES ("{}", "{}", "{}", "{}", "{}");'.format(new_id, location_name, lat, lng, PremisID)
         conn.execute(query)
-        # # insert new CrimeEvent
-        # query = 'SELECT MAX(EventID) FROM CrimeEvent;'
-        # result = conn.execute(query).fetchone()
-        # Eve_max_id = result[0] if result[0] else '300000000'
-        # Eve_base_id = int(Eve_max_id)
-        # new_id = str(Eve_base_id + 1).zfill(9)
-        # query = 'INSERT INTO CrimeEvent (EventID, Date, Time, Crimeid, Locationid) VALUES ("{}", "{}", "{}", "{}", "{}");'.format(Eve_max_id, crime_date, crime_time, crime_id, new_id)
-        # conn.execute(query)
+        # insert new CrimeEvent
+        query = 'SELECT MAX(EventID) FROM CrimeEvents;'
+        result = conn.execute(query).fetchone()
+        Eve_max_id = result[0] if result[0] else '300000000'
+        Eve_base_id = int(Eve_max_id)
+        Eve_base_id = str(Eve_base_id + 1).zfill(9)
+        query = 'INSERT INTO CrimeEvents (EventID, Date, Time, Crimeid, Locationid) VALUES ("{}", "{}", "{}", "{}", "{}");'.format(Eve_base_id, crime_date, crime_time, crime_id, new_id)
+        conn.execute(query)
         conn.close()
     else:
         # do nothing

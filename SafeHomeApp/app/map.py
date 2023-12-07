@@ -185,7 +185,7 @@ def get_route(origin, destination):
     return map
 
 
-def get_heatmap(data):
+def get_heat_map(data):
     # data = [(34.0407, -118.2468, 0.71),
     # (34.0928, -118.3287, 1.30),
     # (34.0242, -118.4965, 0.04),
