@@ -4,7 +4,7 @@ from flask import Flask, request, render_template, redirect, url_for, session, f
 from datetime import time
 import folium
 import requests
-from app import map
+from app.map import get_route, get_heat_map
 import json
 
 @app.route('/')
@@ -161,7 +161,7 @@ def get_map():
     input2 = request.form.get('input2')
     origin = geocoding_api(input1)
     destination = geocoding_api(input2)
-    m = map.get_route(origin, destination)
+    m = get_route(origin, destination)
     # set the iframe width and height
     m.get_root().width = "1000px"
     m.get_root().height = "600px"
@@ -203,7 +203,7 @@ def get_map_default():
 @app.route('/get_heatmap',methods=['GET'])
 def get_heatmap():
     results = db_helper.get_trends()
-    m = map.get_heatmap(results)
+    m = get_heat_map(results)
     # set the iframe width and height
     m.get_root().width = "800px"
     m.get_root().height = "600px"
