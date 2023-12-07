@@ -269,7 +269,7 @@ It has a runtime of 7+ minutes.
     
     ### Decision and Justification
     
-    The decision is to use the index on the `Locations` table for `LocationId`. This decision is based on it provides a slight improvement in the query's performance. Even though the improvement is not drastic, it is the best performance enhancement observed among the three tested indexes.
+The decision is to use the index on the CrimeEvents table for LocationId and CrimeId. This decision is based on it provides a slight improvement in the query's performance. And it can improve the runtime compared with other two. 
     
 
 ### Advanced Query 2
@@ -321,6 +321,8 @@ We then apply three indexing methods trying to improve the runtime:
    ![query2_pic4.png](SafeHome_Tracker_img/query2_pic4.png)
     
     This cost more time to search using the indexing.
+	
+ The decision is to use the index on the CrimeEventes table for Time. This decision is based on it will greatly improve the running speed of JOIN operation, and it won’t create index on primary key, so it should be the best choice among three.
     
     ### Decision and Justification
     
